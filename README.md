@@ -47,35 +47,40 @@ The following input variables are optional (have default values):
 
 ### <a name="input_budgets"></a> [budgets](#input\_budgets)
 
-Description: List of budgets to be assigned under management group.
+Description: List of budgets to be assigned under created resource group.
 
 Type:
 
 ```hcl
-list(object({
-    name       = string
-    amount     = number
-    time_grain = string
-    start_date = string
-    end_date   = string
-    filter = object({
-      dimension = list(object({
-        name   = string
-        values = list(string)
-      }))
-      tag = list(object({
-        name   = string
-        values = list(string)
+list(
+    object({
+      name       = string
+      amount     = number
+      time_grain = optional(string)
+      start_date = string
+      end_date   = optional(string)
+      filter = optional(object({
+        dimensions = list(object({
+          name   = string
+          values = list(string)
+        }))
+        tags = list(object({
+          name   = string
+          values = list(string)
+        }))
+      }), null)
+      notifications = list(object({
+        contact_emails = optional(list(string))
+        contact_groups = optional(list(string))
+        contact_roles  = optional(list(string))
+        enabled        = optional(bool, true)
+        name           = string
+        threshold      = number
+        operator       = string
+        threshold_type = optional(string)
       }))
     })
-    notifications = list(object({
-      enabled        = bool
-      threshold      = number
-      operator       = string
-      threshold_type = string
-      contact_emails = list(string)
-    }))
-  }))
+  )
 ```
 
 Default: `[]`

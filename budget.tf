@@ -2,9 +2,10 @@ resource "azurerm_consumption_budget_management_group" "this" {
   for_each = {
     for budget in var.budgets : budget.name => budget
   }
-  name                = each.value.name
+
   management_group_id = azurerm_management_group.this.id
 
+  name       = each.value.name
   amount     = each.value.amount
   time_grain = each.value.time_grain
 
@@ -13,27 +14,24 @@ resource "azurerm_consumption_budget_management_group" "this" {
     end_date   = each.value.end_date
   }
 
-  filter {
-    dynamic "dimension" {
-      for_each = {
-        for dimension in each.value.filter.dimensions : dimension.name => dimension
-      }
-      content {
-        name   = dimension.value.name
-        values = dimension.value.value
-      }
-
-    }
-
-    dynamic "tag" {
-      for_each = {
-        for tag in each.value.filter.tag : tag.name => tag
-      }
-      content {
-        name   = tag.value.name
-        values = tag.value.values
+  dynamic "filter" {
+    for_each = lookup(each.value, "filter", null) != null ? [each.value.filter] : []
+    content {
+      dynamic "dimension" {
+        for_each = lookup(filter.value, "dimensions", [])
+        content {
+          name   = dimensions.value.name
+          values = dimensions.value.values
+        }
       }
 
+      dynamic "tag" {
+        for_each = lookup(filter.value, "tags", [])
+        content {
+          name   = tags.value.name
+          values = tags.value.values
+        }
+      }
     }
   }
 
@@ -51,33 +49,21 @@ resource "azurerm_consumption_budget_management_group" "this" {
   }
 
   timeouts {
-    create = (
-      (lookup(local.metadata.resource_timeouts, "azurerm_consumption_budget_management_group", null) != null)
-      ? (lookup(local.metadata.resource_timeouts["azurerm_consumption_budget_management_group"], "create", null) != null)
-      ? local.metadata.resource_timeouts["azurerm_consumption_budget_management_group"]["create"]
-      : local.metadata.resource_timeouts.default.create
-      : local.metadata.resource_timeouts.default.create
+    create = try(
+      local.metadata.resource_timeouts["azurerm_consumption_budget_management_group"]["create"],
+      local.metadata.resource_timeouts["default"]["create"]
     )
-    read = (
-      (lookup(local.metadata.resource_timeouts, "azurerm_consumption_budget_management_group", null) != null)
-      ? (lookup(local.metadata.resource_timeouts["azurerm_consumption_budget_management_group"], "read", null) != null)
-      ? local.metadata.resource_timeouts["azurerm_consumption_budget_management_group"]["read"]
-      : local.metadata.resource_timeouts.default.read
-      : local.metadata.resource_timeouts.default.read
+    read = try(
+      local.metadata.resource_timeouts["azurerm_consumption_budget_management_group"]["read"],
+      local.metadata.resource_timeouts["default"]["read"]
     )
-    update = (
-      (lookup(local.metadata.resource_timeouts, "azurerm_consumption_budget_management_group", null) != null)
-      ? (lookup(local.metadata.resource_timeouts["azurerm_consumption_budget_management_group"], "update", null) != null)
-      ? local.metadata.resource_timeouts["azurerm_consumption_budget_management_group"]["update"]
-      : local.metadata.resource_timeouts.default.update
-      : local.metadata.resource_timeouts.default.update
+    update = try(
+      local.metadata.resource_timeouts["azurerm_consumption_budget_management_group"]["update"],
+      local.metadata.resource_timeouts["default"]["update"]
     )
-    delete = (
-      (lookup(local.metadata.resource_timeouts, "azurerm_consumption_budget_management_group", null) != null)
-      ? (lookup(local.metadata.resource_timeouts["azurerm_consumption_budget_management_group"], "delete", null) != null)
-      ? local.metadata.resource_timeouts["azurerm_consumption_budget_management_group"]["delete"]
-      : local.metadata.resource_timeouts.default.delete
-      : local.metadata.resource_timeouts.default.delete
+    delete = try(
+      local.metadata.resource_timeouts["azurerm_consumption_budget_management_group"]["delete"],
+      local.metadata.resource_timeouts["default"]["delete"]
     )
   }
 }
