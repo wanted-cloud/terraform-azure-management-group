@@ -71,8 +71,6 @@ list(
       }), null)
       notifications = list(object({
         contact_emails = optional(list(string))
-        contact_groups = optional(list(string))
-        contact_roles  = optional(list(string))
         enabled        = optional(bool, true)
         name           = string
         threshold      = number
