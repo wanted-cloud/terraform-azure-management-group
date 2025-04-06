@@ -7,31 +7,29 @@ Building block module to create and manage Azure Management Group.
 
 > TBA
 
+## Table of contents
+
+- [Requirements](#requirements)
+- [Providers](#providers)
+- [Variables](#inputs)
+- [Outputs](#outputs)
+- [Resources](#resources)
+- [Usage](#usage)
+- [Contributing](#contributing)
+
 ## Requirements
 
 The following requirements are needed by this module:
 
 - <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) (>= 1.9)
 
-- <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) (>=3.113.0)
+- <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) (>=4.20.0)
 
 ## Providers
 
 The following providers are used by this module:
 
-- <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) (>=3.113.0)
-
-## Modules
-
-No modules.
-
-## Resources
-
-The following resources are used by this module:
-
-- [azurerm_consumption_budget_management_group.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/consumption_budget_management_group) (resource)
-- [azurerm_management_group.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/management_group) (resource)
-- [azurerm_management_group_subscription_association.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/management_group_subscription_association) (resource)
+- <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) (>=4.20.0)
 
 ## Required Inputs
 
@@ -92,14 +90,23 @@ Default: `""`
 
 ### <a name="input_metadata"></a> [metadata](#input\_metadata)
 
-Description: Module metadata object to give user possibility to override default module values.
+Description: Metadata definitions for the module, this is optional construct allowing override of the module defaults defintions of validation expressions, error messages, resource timeouts and default tags.
 
 Type:
 
 ```hcl
 object({
-    default_tags             = optional(map(string), {})
-    resource_timeouts        = optional(map(map(string)), {})
+    resource_timeouts = optional(
+      map(
+        object({
+          create = optional(string, "30m")
+          read   = optional(string, "5m")
+          update = optional(string, "30m")
+          delete = optional(string, "30m")
+        })
+      ), {}
+    )
+    tags                     = optional(map(string), {})
     validator_error_messages = optional(map(string), {})
     validator_expressions    = optional(map(string), {})
   })
@@ -123,14 +130,6 @@ Type: `list(string)`
 
 Default: `[]`
 
-### <a name="input_tags"></a> [tags](#input\_tags)
-
-Description: Key value pairs of custom tags to be applied to the module resources.
-
-Type: `map(string)`
-
-Default: `{}`
-
 ## Outputs
 
 The following outputs are exported:
@@ -147,7 +146,44 @@ Description: Consumption Budget Management Group object
 
 Description: Management Group Subscription Association object
 
-Created by WANTED.solutions s.r.o.
+## Resources
+
+The following resources are used by this module:
+
+- [azurerm_consumption_budget_management_group.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/consumption_budget_management_group) (resource)
+- [azurerm_management_group.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/management_group) (resource)
+- [azurerm_management_group_subscription_association.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/management_group_subscription_association) (resource)
+
+## Usage
+
+> For more detailed examples navigate to `examples` folder of this repository.
+
+Module was also published via Terraform Registry and can be used as a module from the registry.
+
+```hcl
+module "example" {
+  source  = "wanted-cloud/resource-group/azure"
+  version = "x.y.z"
+}
+```
+
+### Basic usage example
+
+The minimal usage for the module is as follows:
+
+```hcl
+module "example" {
+    source = "../.."
+    
+    name   = "example"
+    display_name = "Example Management Group"
+}
+```
+## Contributing
+
+_Contributions are welcomed and must follow [Code of Conduct](https://github.com/wanted-cloud/.github?tab=coc-ov-file) and common [Contributions guidelines](https://github.com/wanted-cloud/.github/blob/main/docs/CONTRIBUTING.md)._
+
+> If you'd like to report security issue please follow [security guidelines](https://github.com/wanted-cloud/.github?tab=security-ov-file).
 ---
-<sup><sub>_2024 &copy; All rights reserved - WANTED.solutions s.r.o. [<@wanted-solutions>](https://github.com/wanted-solutions)_</sub></sup>
+<sup><sub>_2025 &copy; All rights reserved - WANTED.solutions s.r.o._</sub></sup>
 <!-- END_TF_DOCS -->

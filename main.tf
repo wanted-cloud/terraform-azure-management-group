@@ -13,33 +13,21 @@ resource "azurerm_management_group" "this" {
   parent_management_group_id = var.parent_group_id != "" ? format("/providers/Microsoft.Management/managementGroups/%s", var.parent_group_id) : null
 
   timeouts {
-    create = (
-      (lookup(local.metadata.resource_timeouts, "azurerm_management_group", null) != null)
-      ? (lookup(local.metadata.resource_timeouts["azurerm_management_group"], "create", null) != null)
-      ? local.metadata.resource_timeouts["azurerm_management_group"]["create"]
-      : local.metadata.resource_timeouts.default.create
-      : local.metadata.resource_timeouts.default.create
+    create = try(
+      local.metadata.resource_timeouts["azurerm_resource_group"]["create"],
+      local.metadata.resource_timeouts["default"]["create"]
     )
-    read = (
-      (lookup(local.metadata.resource_timeouts, "azurerm_management_group", null) != null)
-      ? (lookup(local.metadata.resource_timeouts["azurerm_management_group"], "read", null) != null)
-      ? local.metadata.resource_timeouts["azurerm_management_group"]["read"]
-      : local.metadata.resource_timeouts.default.read
-      : local.metadata.resource_timeouts.default.read
+    read = try(
+      local.metadata.resource_timeouts["azurerm_resource_group"]["read"],
+      local.metadata.resource_timeouts["default"]["read"]
     )
-    update = (
-      (lookup(local.metadata.resource_timeouts, "azurerm_management_group", null) != null)
-      ? (lookup(local.metadata.resource_timeouts["azurerm_management_group"], "update", null) != null)
-      ? local.metadata.resource_timeouts["azurerm_management_group"]["update"]
-      : local.metadata.resource_timeouts.default.update
-      : local.metadata.resource_timeouts.default.update
+    update = try(
+      local.metadata.resource_timeouts["azurerm_resource_group"]["update"],
+      local.metadata.resource_timeouts["default"]["update"]
     )
-    delete = (
-      (lookup(local.metadata.resource_timeouts, "azurerm_management_group", null) != null)
-      ? (lookup(local.metadata.resource_timeouts["azurerm_management_group"], "delete", null) != null)
-      ? local.metadata.resource_timeouts["azurerm_management_group"]["delete"]
-      : local.metadata.resource_timeouts.default.delete
-      : local.metadata.resource_timeouts.default.delete
+    delete = try(
+      local.metadata.resource_timeouts["azurerm_resource_group"]["delete"],
+      local.metadata.resource_timeouts["default"]["delete"]
     )
   }
 }

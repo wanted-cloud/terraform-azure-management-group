@@ -2,24 +2,6 @@ variable "name" {
   description = "The name or UUID for this Management Group, which needs to be unique across your tenant. A new UUID will be generated if not provided. Changing this forces a new resource to be created."
   type        = string
 
-  validation {
-    condition = can(
-      regex(
-        lookup(
-          local.metadata.validator_expressions,
-          "management_group_name",
-          local.metadata.validator_expressions["default"]
-        ), var.name
-      )
-    )
-    error_message = format(
-      lookup(
-        local.metadata.validator_error_messages,
-        "management_group_name",
-        local.metadata.validator_error_messages["default"]
-      )
-    )
-  }
 }
 
 variable "display_name" {
