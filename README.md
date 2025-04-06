@@ -165,7 +165,7 @@ Module was also published via Terraform Registry and can be used as a module fro
 
 ```hcl
 module "example" {
-  source  = "wanted-cloud/resource-group/azure"
+  source  = "wanted-cloud/management-group/azure"
   version = "x.y.z"
 }
 ```
