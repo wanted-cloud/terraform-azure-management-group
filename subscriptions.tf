@@ -7,26 +7,18 @@ resource "azurerm_management_group_subscription_association" "this" {
   subscription_id     = each.value
 
   timeouts {
-    create = (
-      (lookup(local.metadata.resource_timeouts, "azurerm_management_group_subscription_association", null) != null)
-      ? (lookup(local.metadata.resource_timeouts["azurerm_management_group_subscription_association"], "create", null) != null)
-      ? local.metadata.resource_timeouts["azurerm_management_group_subscription_association"]["create"]
-      : local.metadata.resource_timeouts.default.create
-      : local.metadata.resource_timeouts.default.create
+    create = try(
+      local.metadata.resource_timeouts["azurerm_management_group_subscription_association"]["create"],
+      local.metadata.resource_timeouts["default"]["create"]
     )
-    read = (
-      (lookup(local.metadata.resource_timeouts, "azurerm_management_group_subscription_association", null) != null)
-      ? (lookup(local.metadata.resource_timeouts["azurerm_management_group_subscription_association"], "read", null) != null)
-      ? local.metadata.resource_timeouts["azurerm_management_group_subscription_association"]["read"]
-      : local.metadata.resource_timeouts.default.read
-      : local.metadata.resource_timeouts.default.read
+    read = try(
+      local.metadata.resource_timeouts["azurerm_management_group_subscription_association"]["read"],
+      local.metadata.resource_timeouts["default"]["read"]
     )
-    delete = (
-      (lookup(local.metadata.resource_timeouts, "azurerm_management_group_subscription_association", null) != null)
-      ? (lookup(local.metadata.resource_timeouts["azurerm_management_group_subscription_association"], "delete", null) != null)
-      ? local.metadata.resource_timeouts["azurerm_management_group_subscription_association"]["delete"]
-      : local.metadata.resource_timeouts.default.delete
-      : local.metadata.resource_timeouts.default.delete
+    delete = try(
+      local.metadata.resource_timeouts["azurerm_management_group_subscription_association"]["delete"],
+      local.metadata.resource_timeouts["default"]["delete"]
     )
   }
+
 }
