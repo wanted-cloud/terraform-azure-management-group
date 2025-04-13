@@ -16,7 +16,7 @@ variable "parent_group_id" {
   default     = ""
 }
 
-variable "subscription_ids" {
+variable "subscriptions" {
   description = "List of subscription IDs to be assigned under management group."
   type        = list(string)
   default     = []
@@ -43,7 +43,7 @@ variable "budgets" {
         }))
       }), null)
       notifications = list(object({
-        contact_emails = optional(list(string))
+        contact_emails = list(string)
         enabled        = optional(bool, true)
         name           = string
         threshold      = number

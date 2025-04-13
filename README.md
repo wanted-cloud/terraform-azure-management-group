@@ -21,7 +21,7 @@ Building block module to create and manage Azure Management Group.
 
 The following requirements are needed by this module:
 
-- <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) (>= 1.9)
+- <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) (>= 1.11)
 
 - <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) (>=4.20.0)
 
@@ -70,7 +70,7 @@ list(
         }))
       }), null)
       notifications = list(object({
-        contact_emails = optional(list(string))
+        contact_emails = list(string)
         enabled        = optional(bool, true)
         name           = string
         threshold      = number
@@ -125,7 +125,7 @@ Type: `string`
 
 Default: `""`
 
-### <a name="input_subscription_ids"></a> [subscription\_ids](#input\_subscription\_ids)
+### <a name="input_subscriptions"></a> [subscriptions](#input\_subscriptions)
 
 Description: List of subscription IDs to be assigned under management group.
 
@@ -139,15 +139,15 @@ The following outputs are exported:
 
 ### <a name="output_management_group"></a> [management\_group](#output\_management\_group)
 
-Description: Management Group object
+Description: Azure Management Group object.
 
-### <a name="output_management_group_consumption_budget"></a> [management\_group\_consumption\_budget](#output\_management\_group\_consumption\_budget)
+### <a name="output_management_group_consumption_budgets"></a> [management\_group\_consumption\_budgets](#output\_management\_group\_consumption\_budgets)
 
-Description: Consumption Budget Management Group object
+Description: Consumption Budget Management Group objects.
 
-### <a name="output_management_group_subscription_association"></a> [management\_group\_subscription\_association](#output\_management\_group\_subscription\_association)
+### <a name="output_management_group_subscription_associations"></a> [management\_group\_subscription\_associations](#output\_management\_group\_subscription\_associations)
 
-Description: Management Group Subscription Association object
+Description: Management Group Subscription Association objects.
 
 ## Resources
 

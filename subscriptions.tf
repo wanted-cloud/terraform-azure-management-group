@@ -1,10 +1,10 @@
 resource "azurerm_management_group_subscription_association" "this" {
   for_each = {
-    for subscription_id in var.subscription_ids : subscription_id => subscription_id
+    for subscription in var.subscriptions : subscription => subscription
   }
 
   management_group_id = azurerm_management_group.this.id
-  subscription_id     = each.value
+  subscription_id     = length(split("/", each.value)) == 1 ? format("/subscriptions/%s", each.value) : each.value
 
   timeouts {
     create = try(
